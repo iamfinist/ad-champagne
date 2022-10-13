@@ -31,7 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'goal',
-            'created_at',
+            [
+                'attribute' => 'created_at',
+                'value' => (new DateTime())->setTimestamp($model->created_at)->setTimezone(new DateTimeZone('MSK'))->format("d-m-Y H:i:s")
+            ],
             'price',
             [
                 'attribute' => 'integration_id',

@@ -29,7 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
 
             'id',
-            'created_at',
+            [
+                'attribute' => 'created_at',
+                'value' => function(Event $model) {
+                    return (new DateTime())->setTimestamp($model->created_at)->setTimezone(new DateTimeZone("MSK"))->format("d-m-Y H:i:s");
+                }
+            ],
             'goal',
             'price',
             'integration_id',
