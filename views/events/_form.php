@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\Event $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var Integration[] $integrations */
 ?>
 
 <div class="event-form">
@@ -18,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'price')->textInput() ?>
 
-    <?= $form->field($model, 'integration_id')->dropDownList(ArrayHelper::map(Integration::find()->all(), 'id', 'name')) ?>
+    <?= $form->field($model, 'integration_id')->dropDownList(ArrayHelper::map($integrations, 'id', 'name')) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\NotifyClient;
 use app\models\Event;
+use app\models\Integration;
 use app\models\search\EventSearch;
 use Yii;
 use yii\web\Controller;
@@ -58,8 +59,11 @@ class EventsController extends Controller
             $model->loadDefaultValues();
         }
 
+        $integrations = Integration::find()->all();
+
         return $this->render('create', [
             'model' => $model,
+            'integrations' => $integrations
         ]);
     }
 
