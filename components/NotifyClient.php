@@ -17,7 +17,7 @@ class NotifyClient extends Client
     {
         parent::__construct();
         $query_string = preg_replace(['/{id}/', '/{goal}/', '/{price}/'], [$event->id, $event->goal, $event->price], $event->integration->params);
-        $this->url = $event->integration->endpoint . '?' . $query_string;
+        $this->url = rtrim($event->integration->endpoint, "/") . '?' . $query_string;
         $this->method = $event->integration->getRequestTypeLabel();
     }
 
@@ -28,7 +28,6 @@ class NotifyClient extends Client
             $this->get($this->url)->send();
         elseif ($this->method === 'POST')
             $this->post($this->url)->send();
-        else
-            return;
+
     }
 }

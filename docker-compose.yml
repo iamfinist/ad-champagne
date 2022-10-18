@@ -1,9 +1,69 @@
-version: '2'
+version: '3.5'
+
 services:
-  php:
-    image: yiisoftware/yii2-php:7.4-apache
-    volumes:
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./:/app:delegated
+  web:
+    image: nginx:1.21.1-alpine
+    container_name: test-web
     ports:
-      - '8000:80'
+      - "10075:80"
+    volumes:
+      - .:/var/www/html
+      - ./site.conf:/etc/nginx/conf.d/site.conf
+    restart: always
+    links:
+      - php
+    networks:
+      test-network:
+        aliases:
+          - test-system
+      default:
+        aliases:
+          - web
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test-php
+    volumes:
+      - .:/var/www/html/
+      - ./php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "9000:9000"
+    links:
+      - db
+    restart: always
+    environment:
+      YII_ENV: dev
+    networks:
+      test-network:
+        aliases:
+          - test-system-php
+      default:
+        aliases:
+          - php
+  db:
+    image: mysql:latest
+    container_name: test-db
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    restart: always
+  phpmyadmin:
+    links:
+      - db
+    container_name: test-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "10090:80"
+    environment:
+      PMA_ARBITRARY: 1
+
+volumes:
+  mysql_data:
+
+networks:
+  test-network:
